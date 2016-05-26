@@ -2,9 +2,6 @@
 /*global markerList, $, google, _, m*/
 /*jslint nomen:true */
 
-var Config = {};
-
-
 var Map = function () {
   'use strict';
 

@@ -113,7 +113,7 @@ var FacilityDb = function () {
   };
 
   this.Facility.prototype.returnInfo = function () {
-    return config.facilityInfoMarker(this); 
+    return c.facilityInfoMarker(this); 
     /*return `<h1>${this.name}</h1>
     <p>Address: ${this.address.street} ${this.address.city} ${this.address.state}, ${this.address.zip}</p>
     <p>Phone: ${this.address.phone}</p>

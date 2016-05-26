@@ -21,15 +21,6 @@ function initialize() {
 
 }
 
-Config.prototype.facilityInfoMarker =  function (that) {
-    return  `<h1>${that.name}</h1>
-      <p>Address: ${that.address.street} ${that.address.city} ${that.address.state}, ${that.address.zip}</p>
-      <p>Phone: ${that.address.phone}</p>
-      <p>Available Beds: ${that.availBeds},
-      Total Beds: ${that.totBeds}</p>
-      Website: ${that.website ? '<a target="_blank" href="'+that.website+'">'+that.name+'</a>' : 'No website.'}`  
-}
-
 function resetSearch( resetType ){
 	if ( resetType === 'city' ){
 		$('#search-by-city-btn').text( 'Filter by City' );
