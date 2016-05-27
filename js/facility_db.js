@@ -5,7 +5,7 @@ var FacilityDb = function () {
   'use strict';
 
   this.getFacilityJson = function (map) {
-    var dataURL = 'https://data.oregon.gov/api/views/37wb-r4eb/rows.json',
+    var dataURL = c.oregonFacilityUrl,  //'https://data.oregon.gov/api/views/37wb-r4eb/rows.json',
       that = this;
 
     $.ajax({
@@ -17,28 +17,30 @@ var FacilityDb = function () {
       markerList = m.addMarkerToMap(map, that.data); //addMarkerToMap() returns marker array used to set bounds
       populateCitySearchDropdown(map, that.data);
     }).fail(function () {
-      console.error('getJSON reports \'FAIL\'!');
-      that.data = parseMarkerData();
+      console.warn('getJSON reports \'FAIL\'!');
+      that.data = that.parseMarkerData();
+      markerList = m.addMarkerToMap(map, that.data); 
+      populateCitySearchDropdown(map, that.data);
     });
   };
 
-  this.Facility = function (facility) {
-    this.name = facility[8];
-    this.lat = parseFloat(facility[19]);
-    this.lng = parseFloat(facility[18]);
-    this.totBeds = Math.floor(facility[23]);
+  this.Facility = function (facility, cached) {
+    this.name = facility[ cached ? 9 : 8];
+    this.lat = parseFloat(facility[ cached ? 19 : 19]);
+    this.lng = parseFloat(facility[ cached ? 18 : 18]);
+    this.totBeds = Math.floor(facility[ cached ? 23 : 23]);
     this.availBeds = Math.floor(Math.random() * 11);
-    this.type = facility[22];
+    this.type = facility[ cached ? 22 : 22];
     this.address = {
-      street: facility[10],
-      city: facility[12],
-      state: facility[13],
-      zip: facility[14],
-      county:  facility[16],
-      phone:  facility[9]
+      street: facility[ cached ? 10 : 10],
+      city: facility[ cached ? 12 : 12],
+      state: facility[ cached ? 13 : 13],
+      zip: facility[ cached ? 14 : 14],
+      county:  facility[ cached ? 16 : 16],
+      phone:  facility[ cached ? 9 : 9]
     };
-    this.website = facility[20];
-    this.medicareId = facility[25];
+    this.website = facility[ cached ? 20 : 20];
+    this.medicareId = facility[ cached ? 25 : 25];
   };
 
   this.parseMarkerData = function (facilityJson) {
@@ -46,51 +48,23 @@ var FacilityDb = function () {
     //prepare data to pass to addMarker
     var markerData;
 
+    console.groupCollapsed('Parse Marker Data Debugging');
+
     if (facilityJson) {
-      console.groupCollapsed('Parse Marker Data Debugging');
+
       console.log('JSON received');
       markerData = _.reduce(facilityJson.data, function (facilityObj, facility) {
         facilityObj[facility[1]] = new facilityDb.Facility(facility);
-
         return facilityObj;
       }, {});
-    } else {
-      console.warn('no JSON received');
-      markerData = [
-        {
 
-          name: 'Test Facility One',
-          lat: 45.44,
-          lng: -122.6,
-          totBeds: '20',
-          availBeds: '5',
-          info: 'This is for infowindow One'
-        },
-        {
-          name: 'Test Facility Two',
-          lat: 45.45,
-          lng: -122.7,
-          totBeds: '25',
-          availBeds: '2',
-          info: 'This is for infowindow Two'
-        },
-        {
-          name: 'Test Facility Three',
-          lat: 45.48,
-          lng: -122.75,
-          totBeds: '15',
-          availBeds: '10',
-          info: 'This is for infowindow Three'
-        },
-        {
-          name: 'Test Facility Four',
-          lat: 45.42,
-          lng: -122.7,
-          totBeds: '40',
-          availBeds: '0',
-          info: 'This is for infowindow Four'
-        }
-      ];
+    } else {
+
+      console.warn('no JSON received. Loading cached facility data.');
+      markerData = _.reduce(cachedFacilityData(), function (facilityObj, facility) {
+        facilityObj[facility[1]] = new facilityDb.Facility(facility, true);
+        return facilityObj;
+      }, {});
     }
 
     console.dir(markerData);
@@ -114,15 +88,8 @@ var FacilityDb = function () {
 
   this.Facility.prototype.returnInfo = function () {
     return c.facilityInfoMarker(this); 
-    /*return `<h1>${this.name}</h1>
-    <p>Address: ${this.address.street} ${this.address.city} ${this.address.state}, ${this.address.zip}</p>
-    <p>Phone: ${this.address.phone}</p>
-    <p>Available Beds: ${this.availBeds},
-    Total Beds: ${this.totBeds}</p>
-    Website: ${this.website ? '<a target="_blank" href="'+this.website+'">'+this.name+'</a>' : 'No website.'}`;*/
-
   };
-}; //data is in facilityDb.data property
+}; 
 
 var facilityDb = new FacilityDb();
 

@@ -2,6 +2,8 @@ var markerList = [];
 
 function initialize() {
 
+	c = new Config; 
+	
 	$('#search-by-name-btn').on('click', function(){ searchName( map, $('#search-by-name').val() ) });
 	$('#search-clear').on('click', function(){
 		m.hideMapMarkers( );
@@ -16,8 +18,6 @@ function initialize() {
 	m.prev_infowindow = false; //track if there's an open infowindow as a map property
 
 	facilityDb.getFacilityJson( map );
-
-	c = new Config; 
 
 }
 
