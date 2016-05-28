@@ -1,6 +1,6 @@
 var Config = function () {
 
-	this.oregonFacilityUrl = 'https://data.oregon.gov/api/views/37wb-r4eb/rows.jso';  
+	this.oregonFacilityUrl = 'https://data.oregon.gov/api/views/37wb-r4eb/rows.json';  
 
 	this.facilityInfoMarker =  function (that) {
 		return  `<h1>${that.name}</h1>

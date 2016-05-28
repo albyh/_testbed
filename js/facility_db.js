@@ -13,34 +13,17 @@ var FacilityDb = function () {
       async: true,
       dataType: 'json'
     }).success(function (facilityJson) {
+      console.time( "Success" )
       that.data = that.parseMarkerData(facilityJson);
       markerList = m.addMarkerToMap(map, that.data); //addMarkerToMap() returns marker array used to set bounds
       populateCitySearchDropdown(map, that.data);
+      console.timeEnd( "Success" )
     }).fail(function () {
       console.warn('getJSON reports \'FAIL\'!');
       that.data = that.parseMarkerData();
       markerList = m.addMarkerToMap(map, that.data); 
       populateCitySearchDropdown(map, that.data);
     });
-  };
-
-  this.Facility = function (facility, cached) {
-    this.name = facility[ cached ? 9 : 8]; //array position is different for cached data but only for facility name
-    this.lat = parseFloat(facility[ cached ? 19 : 19]);
-    this.lng = parseFloat(facility[ cached ? 18 : 18]);
-    this.totBeds = Math.floor(facility[ cached ? 23 : 23]);
-    this.availBeds = Math.floor(Math.random() * 11);
-    this.type = facility[ cached ? 22 : 22];
-    this.address = {
-      street: facility[ cached ? 10 : 10],
-      city: facility[ cached ? 12 : 12],
-      state: facility[ cached ? 13 : 13],
-      zip: facility[ cached ? 14 : 14],
-      county:  facility[ cached ? 16 : 16],
-      phone:  facility[ cached ? 9 : 9]
-    };
-    this.website = facility[ cached ? 20 : 20];
-    this.medicareId = facility[ cached ? 25 : 25];
   };
 
   this.parseMarkerData = function (facilityJson) {
@@ -60,6 +43,25 @@ var FacilityDb = function () {
     console.groupEnd('Parse Marker Data Debugging');
 
     return markerData;
+  };
+
+  this.Facility = function (facility, cached) {
+    this.name = facility[ cached ? 9 : 8]; //array position is different for cached data but only for facility name
+    this.lat = parseFloat(facility[19]);
+    this.lng = parseFloat(facility[18]);
+    this.totBeds = Math.floor(facility[23]);
+    this.availBeds = Math.floor(Math.random() * 11);
+    this.type = facility[22];
+    this.address = {
+      street: facility[10],
+      city:   facility[12],
+      state:  facility[13],
+      zip:    facility[14],
+      county: facility[16],
+      phone:  facility[9]
+    };
+    this.website = facility[20];
+    this.medicareId = facility[25];
   };
 
   this.Facility.prototype.returnMarker = function (map) {
