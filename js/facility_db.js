@@ -46,7 +46,8 @@ var FacilityDb = function () {
   };
 
   this.Facility = function (facility, cached) {
-    this.name = facility[ cached ? 9 : 8]; //array position is different for cached data but only for facility name
+    this.id = facility[ cached ? 2 : 1 ]
+    this.name = facility[ cached ? 9 : 8 ]; //array position is different for cached data but only for facility name
     this.lat = parseFloat(facility[19]);
     this.lng = parseFloat(facility[18]);
     this.totBeds = Math.floor(facility[23]);
