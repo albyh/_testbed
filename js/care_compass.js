@@ -1,11 +1,12 @@
 var markerList = [];
-var c = {}; 
+//var c = {}; 
+var c = new Config; 
 
 function initialize() {
 	
 	console.time( "Init" );
 
-	c = new Config; 
+	//var c = new Config; 
 
 	$('#search-by-name-btn').on('click', function(){ searchName( map, $('#search-by-name').val() ) });
 	$('#search-clear').on('click', function(){
@@ -18,7 +19,7 @@ function initialize() {
 	//initialize the map with div (map-container) and options (mapOptions)
 	var map = new google.maps.Map(document.getElementById('map-container'), m.mapOptions );
 
-	m.prev_infowindow = false; //track if there's an open infowindow as a map property
+	//m.prev_infowindow = false; //track if there's an open infowindow as a map property
 
 	facilityDb.getFacilityJson( map );
 
@@ -79,13 +80,10 @@ function searchName( map, searchStr ){
 	} else {
 		resetSearch( 'city' ); //clear any city search indicators
 
-		// remove all prior markers
-		m.hideMapMarkers( );
+		m.hideMapMarkers( ); // remove all prior markers
 
-		//add/display new markers
-		markerList = m.addMarkerToMap( map, markerData ) //, markerList )
+		markerList = m.addMarkerToMap( map, markerData ) //add/display new markers
 		$('#search-criteria').text('Facility Name Includes: ' + searchStr.toUpperCase() );
-
 		$('#search-clear').show(); //display 'clear search/display all' button once there's a search filter
 	}
 

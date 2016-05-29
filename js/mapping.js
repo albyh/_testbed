@@ -47,9 +47,7 @@ var Map = function () {
     });
 
     marker.addListener('click', function () {
-      //if (m.prev_infowindow ){
-      //m.prev_infowindow.close()
-      //}
+
       m.closeOpenInfoWindow(map);
 
       m.prev_infowindow = infowindow;
@@ -70,10 +68,6 @@ var Map = function () {
   };
 
   this.addMarkerToMap = function (map, markerData) {
-    //https://developers.google.com/maps/documentation/javascript/markers
-    //The google.maps.Marker constructor takes a single Marker options object literal, specifying the initial properties of the marker.
-    //position - (required) specifies a LatLng identifying the initial location of the marker.
-    //map - (optional) specifies the Map on which to place the marker.
 
     markerList = [];
     var marker = {},
