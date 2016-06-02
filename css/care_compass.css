@@ -67,6 +67,15 @@ h4 {
     font-size: 1.5rem;
 }
 
+.label-as-badge {
+    border-radius: 1em;
+}
+
+span.label.pull-left {
+    margin-right: 10px;
+    width: 25px;
+}
+
 :-webkit-autofill,
 :-webkit-autofill:hover, 
 :-webkit-autofill:focus {
@@ -76,12 +85,17 @@ h4 {
   transition: background-color 5000s ease-in-out 0s;
 }
 
+.info-head {
+    color: #00A;
+}
+
 .dropdown-menu {
     max-height: 400px;
     overflow: hidden;
     overflow-y: auto;
 }
 
+/* 
 .even-row {
     color: blue;
     background-color: #CDE;
@@ -93,7 +107,7 @@ h4 {
     background-color: #DEF;
     padding: 0px 10px;
 }
-
+ */
 
 /*p {
     color: #DFF;
@@ -146,7 +160,7 @@ h4 {
     float: left;
     background-color: #6B7283;
     width: 30%;
-    min-width: 420px;
+    min-width: 500px;
     padding: 5px 30px 10px 30px;
     border-right: 1px solid black;
     /* min-height: 480px; */
@@ -159,14 +173,16 @@ h4 {
 
 #search-by-name-div {
     padding-right: 0;
+    
 }
 
 #search-by-name {
-    width: 100%;
+    width: 100%;    
 }
 
 #search-by-name-btn  {
     padding-left: 3px;
+    float: right;
 }
 
 #logo{
@@ -189,7 +205,7 @@ h4 {
 }
 
 #search-by-city-btn {
-  width: 100%;
+  width: 98%;
 }
 
 .row {
@@ -201,8 +217,12 @@ h4 {
 }
 
 #search-results{
+    border-top: 1px solid black;
+    border-right: 1px solid gray;
+    border-bottom: 1px solid gray;
+    border-left: 1px solid black;
     margin: 25px 0px;
-    max-height: 400px;
+    max-height: 500px;
     overflow: hidden;
     overflow-y: auto;    
 }

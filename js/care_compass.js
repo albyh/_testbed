@@ -1,14 +1,20 @@
 var markerList = [];
-//var c = {}; 
 var c = new Config; 
 
 function initialize() {
 	
 	console.time( "Init" );
 
-	//var c = new Config; 
+	setFacilityListClickEvent();
 
-	$('#search-by-name-btn').on('click', function(){ searchName( map, $('#search-by-name').val() ) });
+	$('#search-by-name').on('input', function(){ $('#name-search-btn').addClass('btn-primary')});
+	$('#search-by-name').on('focusout', function(){ $('#name-search-btn').removeClass('btn-primary')});
+	$('#name-search-btn').on('focusin', function(){
+	 if($('#search-by-name').val() != ""){$('#name-search-btn').addClass('btn-primary')} });
+	$('#name-search-btn').on('focusout', function(){ $('#name-search-btn').removeClass('btn-primary')});
+
+	$('#search-by-name-btn').on('click', function(){ facilityDb.search( map, 'name' , $('#search-by-name').val() ) });
+
 	$('#search-clear').on('click', function(){
 		m.hideMapMarkers( );
 		resetSearch( 'name' )
@@ -19,12 +25,27 @@ function initialize() {
 	//initialize the map with div (map-container) and options (mapOptions)
 	var map = new google.maps.Map(document.getElementById('map-container'), m.mapOptions );
 
-	//m.prev_infowindow = false; //track if there's an open infowindow as a map property
-
 	facilityDb.getFacilityJson( map );
+	console.timeEnd( "Init" );
+}
 
-	console.timeEnd( "Init")
+function setFacilityListClickEvent( map ){
+	$( 'body' ).on('click', '.facility-list', function( event ) { 
+		//$('.facility-list').removeClass('active');
+		facilityDb.clearActive();
+		console.log( "\t"+this.id +" | "+this.textContent)
+		
+	if ( !m.getMarkerId.isCurrent( this.id ) ){	
+		//$("#"+this.id).addClass('active');
+      	facilityDb.setActive( this.id )		
+		var facilityId = m.getMarkerId.set( this.id ) ;
+		google.maps.event.trigger(markerList[ facilityId ], 'click');
 
+	}else{
+		m.closeOpenInfoWindow( map );
+		m.getMarkerId.reset();
+	}
+	});
 }
 
 function resetSearch( resetType ){
@@ -36,7 +57,6 @@ function resetSearch( resetType ){
 		$('#search-clear').hide();
 	}
 }
-
 
 function populateCitySearchDropdown( map, list ){
 	var cities = _.reduce(window.facilityDb.data, function(result, value) {
@@ -55,78 +75,10 @@ function populateCitySearchDropdown( map, list ){
 	$('.dropdown-menu li').on('click', function(){
   		$('.dropdown-toggle').html($(this).html() + '<span class="caret"></span>');
   		//this.textContent and $(this).text() = city
-  		searchCity( map , $(this).text() )
+  		//searchCity( map , $(this).text() )
+  		facilityDb.search( map, 'city' , $(this).text() );
   		$('#search-by-city-btn').addClass( 'btn-danger' );
 	})
-
-}
-
-function searchName( map, searchStr ){
-	var searchList = {}, noMatch=true;
-     
-	_(facilityDb.data).forEach( function( location , key ){
-		if( location.name.indexOf( searchStr.toUpperCase() ) >= 0 ){
-			noMatch = false;
-			searchList[key] =  location ;
-		}
-	} );
-
-	if (noMatch){
-		errorMsg( "No Matches found for "+searchStr )
-	} else {
-		resetSearch( 'city' ); //clear any city search indicators
-
-		m.hideMapMarkers( ); // remove all prior markers
-
-		markerList = m.addMarkerToMap( map, searchList ) //add/display new markers
-		$('#search-criteria').text('Facility Name Includes: ' + searchStr.toUpperCase() );
-		$('#search-clear').show(); //display 'clear search/display all' button once there's a search filter
-	}
-
-	$('#search-by-name').val(''); // Reset search field
-
-	m.closeOpenInfoWindow( map )
-
-	displayFacilities( searchList )
-}
-
-function searchCity( map, searchCity ){
-	var searchList = {}, noMatch=true;
-
-	_(facilityDb.data).forEach( function( location , key ){
-		if( location.address.city.toUpperCase() === searchCity.toUpperCase() ){
-			noMatch = false;
-			searchList[key] =  location ;
-		}
-	} );
-
-	if (noMatch){
-		errorMsg( "No Matches found for "+searchCity )
-	} else {
-		m.hideMapMarkers( );
-		//debugger
-		markerList = m.addMarkerToMap( map, searchList ) //, markerList )
-
-		$('#search-criteria').text('City: ' + searchCity.toUpperCase() );
-
-		$('#search-clear').show(); //display 'clear search/display all' button once there's a search filter
-	}
-
-	m.closeOpenInfoWindow( map )
-
-	displayFacilities( searchList )
-}
-
-function displayFacilities( list ){
-	var rowColor = 1 ; 
-	_(list).forEach(function(facility){
-		$('<li />' , { 	'id' 	: facility.id,
-						'text' 	: facility.name,
-						'class' : (rowColor++ % 2 === 0) ? "even-row" : "odd-row"	}).appendTo( '#search-results' ) 
-
-
-	});
-
 
 }
 
